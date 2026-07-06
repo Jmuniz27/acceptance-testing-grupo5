@@ -5,6 +5,8 @@ from inventory import (
     find_product,
     list_products,
     update_quantity,
+    remove_product,
+    search_by_category,
     format_inventory,
 )
 
@@ -34,10 +36,12 @@ def step_impl(context, product):
 def step_impl(context):
     context.inventory = create_inventory()
     has_quantity = "Quantity" in context.table.headings
+    has_category = "Category" in context.table.headings
     for row in context.table:
         quantity = int(row["Quantity"]) if has_quantity else 1
+        category = row["Category"] if has_category else "General"
         add_product(context.inventory, row["Product"], quantity=quantity,
-                    category="General", price=0.0)
+                    category=category, price=0.0)
 
 
 @when('the user lists all products')
@@ -64,3 +68,23 @@ def step_impl(context, product, quantity):
     assert found is not None, f'Product "{product}" not found in the inventory'
     assert str(found["quantity"]) == quantity, \
         f'Expected quantity "{quantity}" but got "{found["quantity"]}"'
+
+
+# Escenario 4: Remove a product
+
+@when('the user removes the product "{product}"')
+def step_impl(context, product):
+    remove_product(context.inventory, product)
+
+
+@then('the inventory should not contain "{product}"')
+def step_impl(context, product):
+    assert find_product(context.inventory, product) is None, \
+        f'Product "{product}" should not be in the inventory'
+
+
+# Escenario 5: Search by category
+
+@when('the user searches for products in category "{category}"')
+def step_impl(context, category):
+    context.output = format_inventory(search_by_category(context.inventory, category))
