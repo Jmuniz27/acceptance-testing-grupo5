@@ -106,6 +106,8 @@ def run_cli():
                 print("Invalid option.")
         except (ProductNotFoundError, ProductAlreadyExistsError) as error:
             print(f"Error: {error}")
+        except ValueError:
+            print("Error: quantity and price must be numeric values.")
 
 
 if __name__ == "__main__":
