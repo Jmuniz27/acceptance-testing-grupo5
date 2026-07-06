@@ -1,15 +1,9 @@
-"""Inventory Manager - a command-line application to manage products.
-
-A product is a dict with 4 attributes: name, quantity, category and price.
-"""
-
-
 class ProductNotFoundError(Exception):
-    """Raised when an operation targets a product that does not exist."""
+    """For when an operation targets a product that does not exist."""
 
 
 class ProductAlreadyExistsError(Exception):
-    """Raised when adding a product whose name is already in the inventory."""
+    """For when adding a product whose name is already in the inventory."""
 
 
 def create_inventory():
@@ -57,7 +51,6 @@ def remove_product(inventory, name):
 
 
 def search_by_category(inventory, category):
-    """5th feature: search products that belong to a given category."""
     return [product for product in inventory if product["category"] == category]
 
 
